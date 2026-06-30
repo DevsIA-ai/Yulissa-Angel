@@ -839,7 +839,7 @@ body.env-open { overflow:hidden; }
   <span class="music-label">Música</span>
 </div>
 <audio id="bg-audio" loop>
-<source src="Lady Gaga, Bruno Mars - Die With A Smile (Official Music Video).mp3" type="audio/mpeg">
+<source src="Christina Perri - A Thousand Years (PianoCello Cover).mp3" type="audio/mpeg">
 </audio>
 
 <!-- NAV DOTS -->
@@ -1265,6 +1265,7 @@ function cerrarSobre(){
   ov.classList.add('hide');
   document.body.classList.remove('env-open');
   setTimeout(function(){ ov.remove(); }, 750);
+  startMusic();
 }
 
 /* ---- COUNTDOWN ---- */
@@ -1332,15 +1333,30 @@ SECS.forEach(id => { const el=document.getElementById(id); if(el) secObs.observe
 
 /* ---- MUSIC ---- */
 let playing = false;
-const audio  = document.getElementById('bg-audio');
+const audio    = document.getElementById('bg-audio');
 const musicBtn = document.getElementById('music-btn');
 const wavesEl  = document.getElementById('waves');
-function toggleMusic(){
-  playing = !playing;
-  musicBtn.textContent = playing ? '⏸' : '♪';
-  wavesEl.classList.toggle('paused', !playing);
-  playing ? audio.play().catch(()=>{}) : audio.pause();
+
+function startMusic(){
+  audio.play().then(function(){
+    playing = true;
+    musicBtn.textContent = '⏸';
+    wavesEl.classList.remove('paused');
+  }).catch(function(){});
 }
+
+function toggleMusic(){
+  if(playing){
+    audio.pause();
+    playing = false;
+    musicBtn.textContent = '♪';
+    wavesEl.classList.add('paused');
+  } else {
+    startMusic();
+  }
+}
+
+// La música arranca cuando se cierra el sobre (cerrarSobre la llama)
 
 /* ---- RSVP ---- */
 let attendVal = '';
